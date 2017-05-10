@@ -42,7 +42,7 @@ function displayCreateDiv(divname) {
         <p>' + ml.entercode + '</p>\n \
         <form method="get" action="' + siteroot + '/create" id="intro-create-form">\n \
             <input type="text" name="code" id="intro-create-invite" size="' + invitelength + '" maxlength="' + invitelength + '">\n \
-            <input type="submit" value="' + ml.usecode + '" id="intro-create-submit">\n \
+            <input type="submit" class="submit" value="' + ml.usecode + '" id="intro-create-submit">\n \
             <button type="button" id="intro-create-cancel" onClick="return displayCreateDiv(&quot;main&quot;);">' + ml.cancel + '</button>\n \
         </form>\n';
         setfocuson = "intro-create-invite";

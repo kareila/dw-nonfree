@@ -113,12 +113,15 @@ div#intro-box-main h1 {
   margin-top: 12px;
   margin-bottom: 0.5em;
   font-size: x-large;
+  padding-right: 25px;
 }
 
 div#intro-box-main p {
   color: rgb(86, 86, 86);
   padding-left: 15px;
-  padding-right: 4em;
+  padding-right: 2em;
+  font-size: 85%;
+  padding-bottom: 31px;
 }
 
 div#intro-box-create h1 {
@@ -146,12 +149,24 @@ ul#create-links {
   display: block;
 }
 
+/* this is to center the link list inside the small breakpoint */
+/* (assumes the list contains one or two elements) */
+@import "foundation/components/global";
+@media #{$small-only} {
+    ul#create-links li.one {
+        width: 100%;
+    }
+    ul#create-links li.two {
+        width: 50%;
+    }
+}
+
 ul#create-links li {
 /*  float: left; */
   display: inline;
   color: white;
   font-size: 1.1em;
-  margin-right: 1.25em;
+  margin: 0;
 }
 
 ul#create-links li:last-child,
@@ -175,17 +190,11 @@ input#intro-create-invite {
 input#intro-create-submit {
   clear: both;
   margin-top: 1em;
-  width: 10em;
-  font-weight: bold;
+  margin-right: 2em;
 }
 
 div#frontpage-links {
   margin-top: 2em;
-}
-
-div.links-column {
-  width: 33%;
-  float: left;
 }
 
 div.links-column small {

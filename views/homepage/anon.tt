@@ -5,6 +5,7 @@
   # Authors:
   #      Sophie Hamilton <sophie-dw@theblob.org> (original BML)
   #      Jen Griffin <kareila@livejournal.com> (TT conversion)
+  #      foxfirefey <foxfirefey@dreamwidth.org> (Foundation conversion)
   #
   # Copyright (c) 2009-2017 by Dreamwidth Studios, LLC.
   #
@@ -17,9 +18,15 @@
 
 [%- sections.title=''; # no h1 header element -%]
 [%- sections.windowtitle=site.name -%]
-[%- sections.contentopts='class="layout-wide-right-sidebar"'; # FIXME: not in foundation schemes -%]
 
-[%- dw.need_res( "js/tropo/homepage.js", "stc/tropo/homepage.css" ) -%]
+[%- dw.need_res( { group => "default" }, "stc/tropo/homepage.css" );
+    dw.need_res( { group => "jquery" }, "stc/tropo/homepage.css" );
+    dw.need_res( { group => "foundation" },
+                 "stc/css/skins/tropo/homepage.css"
+                 "stc/css/components/block-grid.css" );
+-%]
+
+[%- CALL dw.active_resource_group( "foundation" ) -%]
 
 [%- sections.head = BLOCK %]
 <meta name="description" content="[% site.name %]: A blog/journal system for people who create.">
@@ -27,6 +34,8 @@
 <meta name="rating" content="General">
 <meta name="ROBOTS" content="All">
 <meta name="revisit-after" Content="14 days">
+
+<script type="text/javascript" src='[% site.jsroot %]/tropo/homepage.js'></script>
 
 <script type="text/javascript">
     var ml = new Object();
@@ -41,8 +50,8 @@
 </script>
 [% END -%]
 
-<div id="intro-box">
-  <div id="intro-box-main">
+<div id="intro-box" class="row collapse">
+  <div id="intro-box-main" class="columns medium-7 small-12">
     <div id="intro-border-main-top"></div>
     <div id="intro-border-main-bottom"></div>
     <div id="intro-border-main-left">
@@ -58,13 +67,7 @@
       <p>[% ".intro.what_is_dreamwidth.content" | ml(sitename = site.name) %]</p>
     </div>
   </div>
-  <div id="intro-box-create">
-    <div id="intro-border-create-top"></div>
-    <div id="intro-border-create-bottom"></div>
-    <div id="intro-border-create-right">
-      <div id="intro-border-create-bottomright"></div>
-      <div id="intro-border-create-topright"></div>
-    </div>
+  <div id="intro-box-create" class="columns medium-5 small-12">
     <div id="intro-create-content">
       <h1>[% '.create.join_dreamwidth' | ml(sitename = site.nameshort) %]</h1>
 
@@ -84,11 +87,13 @@
 -%]
 
       <p>[% string | ml(aopts = 'href="' _ join_faqlink _ '"') %]</p>
-      <ul id="create-links">
+      [%- numclass = use_payments ? "large-block-grid-2" : "large-block-grid-1" -%]
+      <ul id="create-links" class="[% numclass %] medium-block-grid-1">
         [% IF use_payments %]
-          <li><a href="[% site.root %]/shop/account?for=new">[% '.create.paymentlink2' | ml %]</a></li>
+          <li class="two"><a href="[% site.root %]/shop/account?for=new">[% '.create.paymentlink2' | ml %]</a></li>
         [% END %]
-          <li class="lastli"><a href="[% site.root %]/create"[% createjs %]>[% createtext %]</a></li>
+        [%- numclass = use_payments ? "two" : "one" -%]
+          <li class="[% numclass %] lastli"><a href="[% site.root %]/create"[% createjs %]>[% createtext %]</a></li>
       </ul>
 
       [% IF use_invites && codeshare_u.defined %]
@@ -99,7 +104,7 @@
   </div><!--"intro-box-create"-->
 </div><!--"intro-box"-->
 
-<div id="frontpage-links">
+<div id="frontpage-links" class="row">
 
 [%- # if you change the number of columns here, you'll need to tweak the width
     # percentage for .links-column in the CSS file accordingly.
@@ -140,7 +145,7 @@
 -%]
 
 [%- FOREACH column IN columns -%]
-  <div id="links-[% column.name %]" class="links-column">
+  <div id="links-[% column.name %]" class="links-column column medium-4 small-12">
     [% link_ml = ".links." _ column.name %]
     <h2>[% link_ml | ml( sitename = site.nameshort ) %]</h2>
     <dl>
