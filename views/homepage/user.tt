@@ -1,0 +1,41 @@
+[%# homepage/user.tt
+  #
+  # Logged-in site home page for dw-nonfree.
+  #
+  # Authors:
+  #      Sophie Hamilton <sophie-dw@theblob.org> (original BML)
+  #      Jen Griffin <kareila@livejournal.com> (TT conversion)
+  #
+  # Copyright (c) 2009-2017 by Dreamwidth Studios, LLC.
+  #
+  # This program is NOT free software or open-source; you can use it as an
+  # example of how to implement your own site-specific extensions to the
+  # Dreamwidth Studios open-source code, but you cannot use it on your site
+  # or redistribute it, with or without modifications.
+  #
+%]
+
+[%- sections.title=''; # no h1 header element -%]
+[%- sections.windowtitle=site.name -%]
+[%- sections.contentopts='class="layout-wide-right-sidebar"'; # FIXME: not in foundation schemes -%]
+
+[%- sections.head = BLOCK %]
+<meta name="description" content="[% site.name %]: A blog/journal system for people who create.">
+<meta name="keywords" content="diary,journal,blog,dreamwidth">
+<meta name="rating" content="General">
+<meta name="ROBOTS" content="All">
+<meta name="revisit-after" Content="14 days">
+[% END -%]
+
+[%- CALL dw.active_resource_group( "jquery" ) -%]
+[%- dw.need_res( { group => 'jquery' }, 'js/homepage_loggedin.js' ) -%]
+
+<div id="primary">
+[% panels.render_primary %]
+</div>
+
+<div id="secondary">
+[% panels.render_secondary %]
+</div>
+
+<div class="clear-floats"></div>

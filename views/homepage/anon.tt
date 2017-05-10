@@ -1,0 +1,167 @@
+[%# homepage/anon.tt
+  #
+  # Logged-out site home page for dw-nonfree.
+  #
+  # Authors:
+  #      Sophie Hamilton <sophie-dw@theblob.org> (original BML)
+  #      Jen Griffin <kareila@livejournal.com> (TT conversion)
+  #
+  # Copyright (c) 2009-2017 by Dreamwidth Studios, LLC.
+  #
+  # This program is NOT free software or open-source; you can use it as an
+  # example of how to implement your own site-specific extensions to the
+  # Dreamwidth Studios open-source code, but you cannot use it on your site
+  # or redistribute it, with or without modifications.
+  #
+%]
+
+[%- sections.title=''; # no h1 header element -%]
+[%- sections.windowtitle=site.name -%]
+[%- sections.contentopts='class="layout-wide-right-sidebar"'; # FIXME: not in foundation schemes -%]
+
+[%- dw.need_res( "js/tropo/homepage.js", "stc/tropo/homepage.css" ) -%]
+
+[%- sections.head = BLOCK %]
+<meta name="description" content="[% site.name %]: A blog/journal system for people who create.">
+<meta name="keywords" content="diary,journal,blog,dreamwidth">
+<meta name="rating" content="General">
+<meta name="ROBOTS" content="All">
+<meta name="revisit-after" Content="14 days">
+
+<script type="text/javascript">
+    var ml = new Object();
+
+    ml.joinheading = "[% '.create.join_dreamwidth' | ml(sitename = site.nameshort) %]";
+    ml.entercode   = "[% '.create.enter_code' | ml %]";
+    ml.usecode     = "[% '.create.use_code' | ml %]";
+    ml.cancel      = "[% '.create.cancel' | ml %]";
+
+    var invitelength = [% invite_code_len %];
+    var siteroot = "[% site.root %]";
+</script>
+[% END -%]
+
+<div id="intro-box">
+  <div id="intro-box-main">
+    <div id="intro-border-main-top"></div>
+    <div id="intro-border-main-bottom"></div>
+    <div id="intro-border-main-left">
+      <div id="intro-border-main-bottomleft"></div>
+      <div id="intro-border-main-topleft"></div>
+    </div>
+    <div id="intro-border-main-right">
+      <div id="intro-border-main-bottomright"></div>
+      <div id="intro-border-main-topright"></div>
+    </div>
+    <div id="intro-main-content">
+      <h1>[% ".intro.what_is_dreamwidth" | ml(sitename = site.name) %]</h1>
+      <p>[% ".intro.what_is_dreamwidth.content" | ml(sitename = site.name) %]</p>
+    </div>
+  </div>
+  <div id="intro-box-create">
+    <div id="intro-border-create-top"></div>
+    <div id="intro-border-create-bottom"></div>
+    <div id="intro-border-create-right">
+      <div id="intro-border-create-bottomright"></div>
+      <div id="intro-border-create-topright"></div>
+    </div>
+    <div id="intro-create-content">
+      <h1>[% '.create.join_dreamwidth' | ml(sitename = site.nameshort) %]</h1>
+
+[%- string = ".create.join_dreamwidth.content";
+    UNLESS use_invites;  string = string _ ".noinvites";  END;
+    UNLESS use_payments; string = string _ ".nopayments"; END;
+    # possible strings are:
+    # .create.join_dreamwidth.content                      - used if we require invite codes
+    # .create.join_dreamwidth.content.noinvites            - normal (no invite code needed)
+    # .create.join_dreamwidth.content.nopayments           - was in use before payments were set up
+    # .create.join_dreamwidth.content.noinvites.nopayments - highly unlikely to ever be in use on DW.org, but possible on Dreamhacks
+-%]
+
+[%- join_faqlink = faq_url( use_invites ? 105 : 4 );
+    createtext = dw.ml( use_invites ? '.create.invitelink' : '.create.createaccount' );
+    createjs = use_invites ? ' onClick="return nocreatejs || displayCreateDiv(&quot;invite&quot;);"' : '';
+-%]
+
+      <p>[% string | ml(aopts = 'href="' _ join_faqlink _ '"') %]</p>
+      <ul id="create-links">
+        [% IF use_payments %]
+          <li><a href="[% site.root %]/shop/account?for=new">[% '.create.paymentlink2' | ml %]</a></li>
+        [% END %]
+          <li class="lastli"><a href="[% site.root %]/create"[% createjs %]>[% createtext %]</a></li>
+      </ul>
+
+      [% IF use_invites && codeshare_u.defined %]
+      <p style="margin-top: 1em;">[% ".create.join_dreamwidth.codeshare2" | ml( commlink = codeshare_u.ljuser_display ) %]</p>
+      [% END %]
+
+    </div><!--"intro-create-content"-->
+  </div><!--"intro-box-create"-->
+</div><!--"intro-box"-->
+
+<div id="frontpage-links">
+
+[%- # if you change the number of columns here, you'll need to tweak the width
+    # percentage for .links-column in the CSS file accordingly.
+
+    columns = [
+        {
+            name => 'about',
+            items => [
+                [ '/about', 'about_dreamwidth' ],
+                [ '/legal/principles', 'guiding_principles' ],
+            ],
+        },
+        {
+            name => 'community',
+            items => [
+                [ '/latest', 'latest_things', 'footnote' ],
+                [ '/random', 'random_journal', 'footnote' ],
+                [ '/community/random', 'random_community', 'footnote' ],
+            ],
+            footnote => 'no_screening',
+        },
+        {
+            name => 'support',
+            items => [
+                [ '/support/faq', 'faq' ],
+                [ '/support/', 'support' ],
+            ],
+        },
+    ];
+
+    IF news_u.defined;
+        columns.1.items.unshift( [ news_u.journal_base, 'site_news' ] );
+    END;
+
+    IF use_invites && codeshare_u.defined;
+        columns.1.items.push( [ codeshare_u.journal_base, 'codeshare' ] );
+    END;
+-%]
+
+[%- FOREACH column IN columns -%]
+  <div id="links-[% column.name %]" class="links-column">
+    [% link_ml = ".links." _ column.name %]
+    <h2>[% link_ml | ml( sitename = site.nameshort ) %]</h2>
+    <dl>
+    [%- FOREACH item IN column.items;
+            href    = item.0;
+            ml      = item.1;
+            postfix = item.2;
+
+            IF href.match( '^/' ); href = site.root _ href; END -%]
+
+      <dt><a href="[% href %]">[% "${link_ml}.$ml" | ml( sitename = site.nameshort ) %]</a>
+          [% IF postfix; "${link_ml}.$postfix" | ml; END %]</dt>
+      <dd>[% "${link_ml}.${ml}.desc" | ml( sitename = site.nameshort ) %]</dd>
+
+    [%- END -%]
+    </dl>
+
+    [% IF column.defined( 'footnote' ) %]
+    <p><small>[% "${link_ml}.${column.footnote}" | ml( sitename = site.nameshort ) %]</small></p>
+    [% END %]
+  </div>
+[%- END -%]
+
+</div><!--"frontpage-links"-->
